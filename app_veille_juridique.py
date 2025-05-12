@@ -13,7 +13,7 @@ def generer():
 
 @app.get("/telecharger/{filename}")
 def telecharger(filename: str):
-    return FileResponse(f"outputs/{fimport os
+    return FileResponse(f"outputs/{filename}")
 from pptx import Presentation
 from pptx.util import Inches, Pt
 from datetime import datetime
