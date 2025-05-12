@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veille Juridique</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        #download-btn {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Interface de Veille Juridique</h1>
+    <button id="generate-btn" onclick="generateVeille()">Générer la veille</button>
+    <button id="download-btn" onclick="downloadFile()">Télécharger le fichier</button>
+
+    <script>
+        let generatedFile = '';
+
+        function generateVeille() {
+            fetch('https://veille-sociales-privee.onrender.com/generer')
+                .then(response => response.json())
+                .then(data => {
+                    // Afficher le bouton de téléchargement et mémoriser le fichier généré
+                    generatedFile = data.pptx; 
+                    document.getElementById('download-btn').style.display = 'inline';
+                    alert('Veille générée avec succès !');
+                })
+                .catch(error => alert('Erreur lors de la génération de la veille : ' + error));
+        }
+
+        function downloadFile() {
+            if (generatedFile) {
+                window.location.href = `https://veille-sociales-privee.onrender.com/telecharger/${generatedFile}`;
+            } else {
+                alert('Veuillez d\'abord générer la veille.');
+            }
+        }
+    </script>
+</body>
+</html>
