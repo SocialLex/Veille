@@ -1,19 +1,17 @@
-from fastapi import FastAPI
-from fastapi.responses import FileResponse
-from veille_generator import generer_veille
-import datetime
+from fastapi import FastAPI from fastapi.responses import HTMLResponse, FileResponse import os
 
 app = FastAPI()
 
-@app.get("/generer")
-def generer():
-    date_str = datetime.date.today().strftime("%B_%Y")
-    pptx_file, script_file = generer_veille(date_str)
-    return {"pptx": f"/telecharger/{pptx_file}", "script": f"/telecharger/{script_file}"}
+@app.get("/", response_class=HTMLResponse) async def read_root(): with open("index.html", "r", encoding="utf-8") as f: return f.read()
 
-@app.get("/telecharger/{filename}")
-def telecharger(filename: str):
-    return FileResponse(f"outputs/{filename}")
-from pptx import Presentation
-from pptx.util import Inches, Pt
-from datetime import datetime
+@app.get("/generer") def generer(): # Simulation de génération de veille juridique # En pratique : appeler ici ta vraie fonction de génération nom_fichier = "veille_presentation.pptx" chemin_sortie = os.path.join("outputs", nom_fichier)
+
+# Crée un fichier vide si nécessaire (à supprimer quand le vrai script sera branché)
+os.makedirs("outputs", exist_ok=True)
+with open(chemin_sortie, "w") as f:
+    f.write("Fichier PowerPoint généré")
+
+return {"pptx": nom_fichier}
+
+@app.get("/telecharger/{filename}") def telecharger(filename: str): chemin = os.path.join("outputs", filename) return FileResponse(chemin, media_type='application/octet-stream', filename=filename)
+
